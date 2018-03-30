@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+        xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xmlns:mvc="http://www.springframework.org/schema/mvc"
+        xmlns:p="http://www.springframework.org/schema/p"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-4.3.xsd
+    http://www.springframework.org/schema/mvc
+	http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+    http://www.springframework.org/schema/p
+	http://www.springframework.org/schema/p/spring-p-4.3.xsd">
+    <!--定义控制器的基础包名，于手动扫描组件注解-->
+    <context:component-scan base-package="com.**.controller"></context:component-scan>
+    <!--指定使用注解驱动配置方式-->
+    <mvc:annotation-driven></mvc:annotation-driven>
+    <!--使用servlet容器默认的方式处理静态资源的访问（静态资源：图片、css、js）-->
+    <mvc:default-servlet-handler></mvc:default-servlet-handler>
+
+    <!--配置视图解析器:jsp视图-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" id="viewResolver">
+        <property name="prefix" value="/"></property>
+        <property name="suffix" value=".jsp"></property>
+    </bean>
+    <!--定义文件上传解析器-->
+    <bean class="org.springframework.web.multipart.commons.CommonsMultipartResolver" id="multipartResolver">
+        <property name="maxUploadSize" value="5000000"/>
+    </bean>
+    <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver" id="exceptionResolver">
+        <property name="exceptionMappings">
+            <props>
+                <prop key="java.lang.ArithmeticException">error</prop>
+            </props>
+        </property>
+    </bean>
+    <!--拦截器配置-->
+    <mvc:interceptors>
+        <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" id="changeInterceptor"></bean>
+        <mvc:interceptor>
+            <mvc:mapping path="/user"/>
+            <bean class="com.newer.interceptor.TestInterceptor">
+
+            </bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
+    <bean class="org.springframework.context.support.ResourceBundleMessageSource" id="bundleMessageSource">
+        <!--配置国际化资源文件的基础名称-->
+        <property name="basename" value="message"/>
+    </bean>
+    <!--配置本地化解析器-->
+    <bean class="org.springframework.web.servlet.i18n.SessionLocaleResolver" id="localeResolver">
+
+    </bean>
+</beans>
